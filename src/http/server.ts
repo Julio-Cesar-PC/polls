@@ -8,6 +8,12 @@ import { pollResults } from './ws/poll-results';
 
 const app = fastify();
 
+app.setErrorHandler((error, request, reply) => {
+    const statusCode = error.statusCode || 500;
+    const message = error.message || 'Internal Server Error';
+    reply.status(statusCode).send({ message });
+});
+
 app.register(cookie, {
     secret: 'dlasjndasljndaklsjbndasouhn',
     hook: 'onRequest',

@@ -8,6 +8,11 @@ export async function pollResults(app: FastifyInstance) {
             pollId: z.string().uuid(),
         });
 
+        if (!gerPollParams.safeParse(request.params).success) {
+            connection.socket.close(4000, 'Invalid poll ID');
+            return;
+        }
+
         const { pollId } = gerPollParams.parse(request.params);
          
         voutingPubSub.subscribe(pollId, (message) => {
